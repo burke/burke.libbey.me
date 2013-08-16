@@ -63,7 +63,7 @@ simple ways:
 
 1. Worker Pool
 
-2. Token Bucket
+2. Semaphore
 
 The Worker Pool strategy is reminiscent of the ruby example above:
 
@@ -86,20 +86,20 @@ channel. This limits the concurrency to `nWorkers`, meaning that you will never
 have more than 100 HTTP requests pending, and never be consuming more than 100
 FDs as a result of this function.
 
-The token bucket is a simliar strategy, but I feel it's cleaner in certain
+Using a semaphore is a simliar strategy, but I feel it's cleaner in certain
 circumstances:
 
 ```go
 const nTokens = 100
 func crawl(urlProducer chan string) {
-  bucket := make(chan bool, nTokens)
+  sem := make(chan bool, nTokens)
   for i := 0, i < nTokens; i++ {
-    bucket <- true
+    sem <- true
   }
   for url := range(urlProducer) {
     go func() {
-      <- bucket
-      defer bucket <- true
+      <- sem
+      defer sem <- true
 
       fetch(<-urlProducer)
     }
@@ -107,11 +107,11 @@ func crawl(urlProducer chan string) {
 }
 ```
 
-You first pre-fill a channel ("bucket") with 100 tokens. Each time you want to
-start an HTTP request, you must first withdraw a token from the bucket. If all
-100 tokens are currently out, you must wait until one has been returned.
+You first pre-fill the semaphore with 100 tokens. Each time you want to start
+an HTTP request, you must first withdraw a token. If all 100 tokens are
+currently out, you must wait until one has been returned.
 
-The token bucket strategy accomplishes largely the same performance
+The semaphore strategy accomplishes largely the same performance
 characteristics as the worker pool strategy, but one or the other can feel more
 appropriate depending on the problem. It's good to be familiar with both. Both
 will prevent you from exceeding the file descriptor limit (which, incidentally,
