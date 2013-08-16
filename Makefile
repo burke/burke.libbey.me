@@ -8,3 +8,6 @@ build: bloggy
 
 bloggy: bloggy.go
 	go build -o bloggy
+
+clean:
+	rm -rf bloggy public
