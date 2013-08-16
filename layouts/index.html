@@ -1,0 +1,41 @@
+<!doctype html>
+<head>
+<title>Burke Libbey</title>
+<meta name="author" content="Burke Libbey">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="/static/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Gentium+Basic|Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body id="home">
+
+<div id="container">
+  <header><h1>Burke Libbey</h1></header>
+  <div id="main">
+    <nav>
+      <ul>
+        <li>GitHub: <a href="https://github.com/burke">@burke</a></li>
+        <li>Twitter: <a href="https://twitter.com/burkelibbey">@burkelibbey</a></li>
+      </ul>
+      <ul>
+        <li>Email: <a href="mailto:burke@libbey.me">burke@libbey.me</a></li>
+        <li>Working at: <a href="http://shopify.com" title="Shopify">Shopify</a></li>
+      </ul>
+      <br style="clear:both;">
+    </nav>
+
+    <h3>Posts</h3>
+
+    {{ range .Recent.Limit 2 }}
+    <article>
+      {{ .Date.Format "2006-02-01" }}
+      <a href="{{ .Url }}">{{ .Title }}</a>
+    </article>
+    {{ end }}
+
+  </div>
+  <footer></footer>
+</div>
+</body>
+</html>
+
